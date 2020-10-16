@@ -82,7 +82,7 @@ def seleksiOrangtua(k):
         weightValue = fitness[i] / sum(fitness)
         weight.append(weightValue)
     while len(orangtua) != k:
-        #memilih secara random dari populasi
+        #memilih secara random dari populasi dengan chance
         calon = random.choices(populasi, weights = weight)[0]
         #cek agar tidak ada calon dengan bit yang sama
         found = False
@@ -121,7 +121,7 @@ def mutasi(anak1,anak2):
 
 #Rekombinasi 1 titik
 def rekombinasi(ortu1,ortu2):
-    titik = random.randint(1, len(ortu1.bit) - 1)
+    titik = random.randint(1, len(ortu1.bit) - 2)
 
     anak1 = ortu1.bit[:titik] + ortu2.bit[titik:]
     anak2 = ortu2.bit[:titik] + ortu1.bit[titik:]
@@ -138,10 +138,10 @@ def rekombinasi(ortu1,ortu2):
 #rekombinasi(orangtua[0],orangtua[1])
 
 #Seleksi survivor
-#Membuang kromosom yang tidak diinginkan berdasarkan nilai h (h positif terbesar yang dibuang)
+#Membuang kromosom yang tidak diinginkan berdasarkan nilai f (f positif terbesar yang dibuang)
 def seleksiSurvivor():
     #sorting dengan parameter nilai h terkecil -> terbesar 
-    populasi.sort(key = lambda x :h(x.x1,x.x2))
+    populasi.sort(key = lambda x :f(x.x1,x.x2))
 
     #mempop list
     while len(populasi) != batasPopulasi:
@@ -177,18 +177,21 @@ while len(populasi) != batasPopulasi:
 #batasan generasi (terminasi iterasi)
 batasGenerasi = 20
 while generasi <= batasGenerasi:
-    
     print("Generasi ke ", generasi)
     for i in range(len(populasi)):
+        
         '''
         #print setiap populasi digenerasi
         print(populasi[i].bit, ' x1 = ', populasi[i].x1, ' x2 = ', populasi[i].x2, ' h = ',h(populasi[i].x1,populasi[i].x2), ' f = ',f(populasi[i].x1,populasi[i].x2))
         '''
-        #print populasi generasi = 1 dan populasi generas ke-terminasi
+        
+        #print populasi generasi = 1 atau populasi generas ke-terminasi
         if generasi == 1 or generasi == 20:
             print(populasi[i].bit, ' x1 = ', populasi[i].x1, ' x2 = ', populasi[i].x2, ' h = ',h(populasi[i].x1,populasi[i].x2), ' f = ',f(populasi[i].x1,populasi[i].x2))
-    
+        #endfor
+
     orangtua = seleksiOrangtua(2)
     seleksiSurvivor()
     rekombinasi(orangtua[0],orangtua[1])
     generasi = generasi + 1
+    #endwhile
