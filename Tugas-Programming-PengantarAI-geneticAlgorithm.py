@@ -39,8 +39,8 @@ class Kromosom:
             sum2 = g[i] * 2**j + sum2
         return rb + (((ra - rb) / sum1) * sum2 )
 
-#test Kromosom and Decode
 '''
+#test Kromosom and Decode
 test = Kromosom()
 print(test.bit)
 print(test.x1)
@@ -75,15 +75,17 @@ def seleksiOrangtua(k):
     #menyimpan nilai fitness dari semua k di populasi
     fitness = []
     weight = []
+    #menghitung total fitness
     for i in range(len(populasi)):
         fitnessValue = f(populasi[i].x1,populasi[i].x2)
         fitness.append(fitnessValue)
+    #menentukan chance dari kromosom ke-i
     for i in range(len(populasi)):
         weightValue = fitness[i] / sum(fitness)
         weight.append(weightValue)
     while len(orangtua) != k:
         #memilih secara random dari populasi dengan chance
-        calon = random.choices(populasi, weights = weight)[0]
+        calon = random.choices(populasi, weight)[0]
         #cek agar tidak ada calon dengan bit yang sama
         found = False
         for i in orangtua:
@@ -140,7 +142,7 @@ def rekombinasi(ortu1,ortu2):
 #Seleksi survivor
 #Membuang kromosom yang tidak diinginkan berdasarkan nilai f (f positif terbesar yang dibuang)
 def seleksiSurvivor():
-    #sorting dengan parameter nilai h terkecil -> terbesar 
+    #sorting dengan parameter nilai f terkecil -> terbesar 
     populasi.sort(key = lambda x :f(x.x1,x.x2))
 
     #mempop list
@@ -180,18 +182,23 @@ while generasi <= batasGenerasi:
     print("Generasi ke ", generasi)
     for i in range(len(populasi)):
         
-        '''
-        #print setiap populasi digenerasi
-        print(populasi[i].bit, ' x1 = ', populasi[i].x1, ' x2 = ', populasi[i].x2, ' h = ',h(populasi[i].x1,populasi[i].x2), ' f = ',f(populasi[i].x1,populasi[i].x2))
-        '''
         
-        #print populasi generasi = 1 atau populasi generas ke-terminasi
+        #tampilkan setiap kromosom digenerasi
+        print(populasi[i].bit, ' x1 = ', populasi[i].x1, ' x2 = ', populasi[i].x2, ' h = ',h(populasi[i].x1,populasi[i].x2), ' f = ',f(populasi[i].x1,populasi[i].x2))
+        
+        
+        '''
+        #tampilkan generasi 1 dan generasi ke terminasi
         if generasi == 1 or generasi == 20:
             print(populasi[i].bit, ' x1 = ', populasi[i].x1, ' x2 = ', populasi[i].x2, ' h = ',h(populasi[i].x1,populasi[i].x2), ' f = ',f(populasi[i].x1,populasi[i].x2))
         #endfor
+        '''
 
     orangtua = seleksiOrangtua(2)
     seleksiSurvivor()
     rekombinasi(orangtua[0],orangtua[1])
     generasi = generasi + 1
     #endwhile
+
+print('')
+print('Kromosom terbaik ', populasi[0].bit, ' x1 = ', populasi[0].x1, ' x2 = ', populasi[0].x2, ' h = ',h(populasi[0].x1,populasi[0].x2), ' f = ',f(populasi[0].x1,populasi[0].x2))
